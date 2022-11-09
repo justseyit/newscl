@@ -28,4 +28,6 @@ func GetNewsHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	sendResponse(w, newsList, http.StatusOK)
+
+	///TODO: Add a database to store the news
 }
