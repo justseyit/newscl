@@ -2,8 +2,6 @@ package model
 
 import (
 	"encoding/xml"
-
-	"github.com/google/uuid"
 )
 
 type ReutersRSS struct {
@@ -61,9 +59,8 @@ type ReutersRSS struct {
 func (r ReutersRSS) ReutersRSSToNewsClNewsList() NewsClNewsList {
 	var newsList NewsClNewsList
 	for _, item := range r.Channel.Item {
-		 uuid := uuid.New()
 		newsList.News = append(newsList.News, NewsClNews{
-			ID:          uuid.String(),
+			ID:          item.Guid.Text,
 			Title:       item.Title,
 			Description: item.Description,
 			URL:         item.Link,
