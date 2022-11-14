@@ -5,11 +5,14 @@ import (
 	"log"
 	"net/http"
 	"newscl/api"
+	"newscl/repository"
 
 	"github.com/gorilla/mux"
 )
 
 func main() {
+
+	repository.InitMongoDB()
 
 	mux := mux.NewRouter()
 

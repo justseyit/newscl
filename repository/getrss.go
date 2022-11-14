@@ -5,6 +5,12 @@ import (
 	"newscl/service"
 )
 
+var mongo service.MongoDB
+
+func InitMongoDB() {
+	mongo = *service.NewMongoDB()
+}
+
 func GetNewsByProvider(provider model.Provider) (model.NewsClNewsList, error) {
 	var newsList model.NewsClNewsList
 	switch provider {
@@ -21,5 +27,6 @@ func GetNewsByProvider(provider model.Provider) (model.NewsClNewsList, error) {
 		}
 		newsList = reutersNews.ReutersRSSToNewsClNewsList()
 	}
+	mongo.SendNews(newsList)
 	return newsList, nil
 }

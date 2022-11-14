@@ -1,6 +1,10 @@
 package model
 
-import "encoding/xml"
+import (
+	"encoding/xml"
+
+	"github.com/google/uuid"
+)
 
 type BBCRSS struct {
 	XMLName xml.Name `xml:"rss"`
@@ -43,7 +47,9 @@ type BBCRSS struct {
 func (b BBCRSS) BBCRSSToNewsClNewsList() NewsClNewsList {
 	var newsList NewsClNewsList
 	for _, item := range b.Channel.Item {
-		newsList.News = append(newsList.News, newsClNews{
+		uuid := uuid.New()
+		newsList.News = append(newsList.News, NewsClNews{
+			ID:          uuid.String(),
 			Title:       item.Title,
 			Description: item.Description,
 			URL:         item.Link,

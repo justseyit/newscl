@@ -3,10 +3,11 @@ package model
 import "net/http"
 
 type NewsClNewsList struct {
-	News []newsClNews `json:"news" xml:"news"`
+	News []NewsClNews `json:"news" xml:"news"`
 }
 
-type newsClNews struct {
+type NewsClNews struct {
+	ID          string `json:"id" xml:"id" bson:"_id"`
 	Title       string `json:"title" xml:"title"`
 	URL         string `json:"url" xml:"url"`
 	Description string `json:"description" xml:"description"`
@@ -25,4 +26,3 @@ type NewsClResponse struct {
 	TotalResults int            `json:"totalResults" xml:"totalResults"`
 	NewsList     NewsClNewsList `json:"newsList" xml:"newsList"`
 }
-

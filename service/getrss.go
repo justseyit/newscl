@@ -7,6 +7,7 @@ import (
 	"newscl/model"
 )
 
+
 func GetBBCNews() (model.NewsClNewsList, error) {
 	var newsList model.NewsClNewsList
 	bbcNews, err := GetBBCNewsRSS()

@@ -18,3 +18,14 @@ func ToProvider(provider string) Provider {
 		return INVALID
 	}
 }
+
+func (p *Provider) String() string {
+	switch *p {
+	case BBC:
+		return "BBC"
+	case REUTERS:
+		return "Reuters"
+	default:
+		return "Invalid"
+	}
+}
