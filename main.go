@@ -13,7 +13,7 @@ import (
 	"github.com/gorilla/mux"
 )
 
-const(
+const (
 	port = 9999
 )
 
@@ -26,24 +26,25 @@ func main() {
 
 	log.Println("Starting the scheduled task")
 
-	executor := sch.NewTimedExecutor(time.Second * 3, time.Minute)
-
-	bbcNews, _ := repository.GetNewsByProvider(model.BBC)
-	reutersNews, _ := repository.GetNewsByProvider(model.REUTERS)
+	executor := sch.NewTimedExecutor(time.Second*3, time.Minute)
 
 	executor.Start(func() {
-		err := api.PostToApi(bbcNews)
-		if err != nil {
-			log.Fatalf("Error posting news to API: %v", err)
+		bbcNews, _ := repository.GetNewsByProvider(model.BBC)
+		errBBC := api.PostToApi(bbcNews)
+		if errBBC != nil {
+			log.Fatalf("Error posting BBC news to API: %v", errBBC)
 		}
+		
 	}, true)
 
 	executor.Start(func() {
-		err := api.PostToApi(reutersNews)
-		if err != nil {
-			log.Fatalf("Error posting news to API: %v", err)
+		reutersNews, _ := repository.GetNewsByProvider(model.REUTERS)
+		errReuters := api.PostToApi(reutersNews)
+		if errReuters != nil {
+			log.Fatalf("Error posting Reuters news to API: %v", errReuters)
 		}
 	}, true)
+
 
 	mux.HandleFunc("/info", api.GetInfoHandler).Methods("GET")
 

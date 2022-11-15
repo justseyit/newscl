@@ -2,7 +2,6 @@ package model
 
 import (
 	"encoding/xml"
-	"fmt"
 	"strings"
 	"time"
 )
@@ -94,8 +93,7 @@ func (r ReutersRSS) toTimestamp(pubDate string) int {
 	loc := time.FixedZone(timezone, 0)
 	t, _ := time.ParseInLocation("02 Jan 2006 15:04:05", day+" "+month+" "+year+" "+tim, loc)
 
-	fmt.Println(pubDate, " -> ", t.Unix())
+	//fmt.Println(pubDate, " -> ", t.Unix())
 	return int(t.Unix())
-	
 
 }
