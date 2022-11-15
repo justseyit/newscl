@@ -8,6 +8,7 @@ require (
 )
 
 require (
+	github.com/gbenroscience/scheduled-executor v0.1.6 // indirect
 	github.com/golang/snappy v0.0.1 // indirect
 	github.com/google/uuid v1.3.0 // indirect
 	github.com/klauspost/compress v1.13.6 // indirect

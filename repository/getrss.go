@@ -5,10 +5,10 @@ import (
 	"newscl/service"
 )
 
-var mongo service.MongoDB
+var Mongo service.MongoDB
 
 func InitMongoDB() {
-	mongo = *service.NewMongoDB()
+	Mongo = *service.NewMongoDB()
 }
 
 func GetNewsByProvider(provider model.Provider) (model.NewsClNewsList, error) {
@@ -27,6 +27,10 @@ func GetNewsByProvider(provider model.Provider) (model.NewsClNewsList, error) {
 		}
 		newsList = reutersNews.ReutersRSSToNewsClNewsList()
 	}
-	mongo.SendNews(newsList)
+	Mongo.SendNews(newsList)
 	return newsList, nil
+}
+
+func PostNews(newsList model.NewsClNewsList) error {
+	return Mongo.SendNews(newsList)
 }

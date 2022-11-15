@@ -2,6 +2,9 @@ package model
 
 import (
 	"encoding/xml"
+	"fmt"
+	"strings"
+	"time"
 )
 
 type ReutersRSS struct {
@@ -64,14 +67,35 @@ func (r ReutersRSS) ReutersRSSToNewsClNewsList() NewsClNewsList {
 			Title:       item.Title,
 			Description: item.Description,
 			URL:         item.Link,
-			Time:        item.PubDate,
+			Time:        r.toTimestamp(item.PubDate),
 			Location:    "UK",
 			Language:    "EN",
 			Type:        2,
 			SourceName:  "Reuters",
 			SourceURL:   "https://www.reuters.com",
-			ImageURL:    "",
+			Tags:        "",
+			ImageURL:    "https://www.reuters.com/resources_v2/images/reuters125.png",
 		})
 	}
 	return newsList
+}
+
+//Convert pub date to unix timestamp
+//format: 12 Nov 2022 23:18:17 +0000
+
+func (r ReutersRSS) toTimestamp(pubDate string) int {
+	s := strings.Split(pubDate, " ")
+	month := s[2]
+	day := s[1]
+	year := s[3]
+	tim := s[4]
+	timezone := s[5]
+
+	loc := time.FixedZone(timezone, 0)
+	t, _ := time.ParseInLocation("02 Jan 2006 15:04:05", day+" "+month+" "+year+" "+tim, loc)
+
+	fmt.Println(pubDate, " -> ", t.Unix())
+	return int(t.Unix())
+	
+
 }

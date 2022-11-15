@@ -16,7 +16,8 @@ type NewsClNews struct {
 	ImageURL    string `json:"image_url" xml:"image_url"`
 	Language    string `json:"language" xml:"language"`
 	Location    string `json:"location" xml:"location"`
-	Time        string `json:"time" xml:"time"`
+	Time        int    `json:"time" xml:"time"`
+	Tags        string `json:"tags" xml:"tags"`
 	Type        int    `json:"type" xml:"type"`
 }
 

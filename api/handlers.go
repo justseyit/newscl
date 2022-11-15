@@ -31,3 +31,7 @@ func GetNewsHandler(w http.ResponseWriter, r *http.Request) {
 
 	///TODO: Add a database to store the news
 }
+
+func GetInfoHandler(w http.ResponseWriter, r *http.Request) {
+	
+}

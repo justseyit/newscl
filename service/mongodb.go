@@ -88,3 +88,85 @@ func (m *MongoDB) GetNewsByLanguage(language string) (model.NewsClNewsList, erro
 	}
 	return newsList, nil
 }
+
+type newsJustID struct {
+	ID string `bson:"_id" json:"id"`
+}
+
+func (m *MongoDB) FlagSucceeded(news model.NewsClNews) error {
+	isAlreadyFlaggedAsSucceeded, err := m.IsSucceeded(news.ID)
+	if err != nil {
+		return err
+	}
+	if !isAlreadyFlaggedAsSucceeded {
+		collection := m.Client.Database("newscl").Collection("succeeded")
+		bsonDocument := bson.D{{Key: "_id", Value: news.ID}}
+		options := options.InsertOne()
+		options.SetBypassDocumentValidation(false)
+		ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+		defer cancel()
+		result, err := collection.InsertOne(ctx, bsonDocument, options)
+		if err != nil {
+			return err
+		}
+		log.Printf("Succeeded: %v", result)
+	} else {
+		log.Printf("Already flagged as succeeded: %v", news.ID)
+	}
+	return nil
+}
+
+func (m *MongoDB) FlagFailed(news model.NewsClNews) error {
+	isAlreadyFlaggedAsFailed, err := m.IsFailed(news.ID)
+	if err != nil {
+		return err
+	}
+	if !isAlreadyFlaggedAsFailed {
+		collection := m.Client.Database("newscl").Collection("failed")
+		bsonDocument := bson.D{{Key: "_id", Value: news.ID}}
+		options := options.InsertOne()
+		options.SetBypassDocumentValidation(false)
+		ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+		defer cancel()
+		result, err := collection.InsertOne(ctx, bsonDocument, options)
+		if err != nil {
+			return err
+		}
+		log.Printf("Failed: %v", result)
+	} else {
+		log.Printf("Already flagged as failed: %v", news.ID)
+	}
+	return nil
+}
+
+func (m *MongoDB) IsSucceeded(id string) (bool, error) {
+	var newsJustID newsJustID
+	collection := m.Client.Database("newscl").Collection("succeeded")
+	filter := bson.D{{Key: "_id", Value: id}}
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
+	err := collection.FindOne(ctx, filter).Decode(&newsJustID)
+	if err != nil {
+		if err == mongocl.ErrNoDocuments {
+			return false, nil
+		}
+		return false, err
+	}
+	return true, nil
+}
+
+func (m *MongoDB) IsFailed(id string) (bool, error) {
+	var newsJustID newsJustID
+	collection := m.Client.Database("newscl").Collection("failed")
+	filter := bson.D{{Key: "_id", Value: id}}
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
+	err := collection.FindOne(ctx, filter).Decode(&newsJustID)
+	if err != nil {
+		if err == mongocl.ErrNoDocuments {
+			return false, nil
+		}
+		return false, err
+	}
+	return true, nil
+}

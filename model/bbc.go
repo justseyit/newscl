@@ -2,6 +2,9 @@ package model
 
 import (
 	"encoding/xml"
+	"fmt"
+	"strings"
+	"time"
 )
 
 type BBCRSS struct {
@@ -50,14 +53,32 @@ func (b BBCRSS) BBCRSSToNewsClNewsList() NewsClNewsList {
 			Title:       item.Title,
 			Description: item.Description,
 			URL:         item.Link,
-			Time:        item.PubDate,
+			Time:        b.toTimestamp(item.PubDate),
 			Location:    "UK",
 			Language:    "EN",
 			Type:        2,
 			SourceName:  "BBC",
 			SourceURL:   "https://www.bbc.com/news",
-			ImageURL:    "",
+			Tags:        "",
+			ImageURL:    "https://www.bbc.com/news/special/2015/newsspec_10857/bbc_news_logo.png?cb=1",
 		})
 	}
 	return newsList
+}
+
+func (b BBCRSS) toTimestamp(pubDate string) int {
+	s := strings.Split(pubDate, " ")
+	month := s[2]
+	day := s[1]
+	year := s[3]
+	tim := s[4]
+	timezone := s[5]
+
+	loc := time.FixedZone(timezone, 0)
+	t, _ := time.ParseInLocation("02 Jan 2006 15:04:05", day+" "+month+" "+year+" "+tim, loc)
+
+	fmt.Println(pubDate, " -> ", t.Unix())
+	
+	return int(t.Unix())
+
 }
