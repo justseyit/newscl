@@ -20,7 +20,6 @@ const (
 func main() {
 
 	repository.InitMongoDB()
-	model.InitServiceInfo()
 
 	mux := mux.NewRouter()
 
@@ -34,7 +33,7 @@ func main() {
 		if errBBC != nil {
 			log.Fatalf("Error posting BBC news to API: %v", errBBC)
 		}
-		
+
 	}, true)
 
 	executor.Start(func() {
@@ -44,7 +43,6 @@ func main() {
 			log.Fatalf("Error posting Reuters news to API: %v", errReuters)
 		}
 	}, true)
-
 
 	mux.HandleFunc("/info", api.GetInfoHandler).Methods("GET")
 

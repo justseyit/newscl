@@ -36,6 +36,7 @@ func NewMongoDB() *MongoDB {
 func (m *MongoDB) SendNews(newsList model.NewsClNewsList) error {
 	collection := m.Client.Database("newscl").Collection("news")
 	options := options.InsertOne()
+	
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 	for _, news := range newsList.News {
@@ -149,8 +150,11 @@ func (m *MongoDB) IsSucceeded(id string) (bool, error) {
 	if err != nil {
 		if err == mongocl.ErrNoDocuments {
 			return false, nil
+		}else{
+			
+			return false, err
 		}
-		return false, err
+		
 	}
 	return true, nil
 }
@@ -165,8 +169,10 @@ func (m *MongoDB) IsFailed(id string) (bool, error) {
 	if err != nil {
 		if err == mongocl.ErrNoDocuments {
 			return false, nil
+		}else{
+			
+			return false, err
 		}
-		return false, err
 	}
 	return true, nil
 }

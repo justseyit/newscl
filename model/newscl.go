@@ -7,7 +7,7 @@ type NewsClNewsList struct {
 }
 
 type NewsClNews struct {
-	ID          string `json:"id" xml:"id" bson:"_id"`
+	ID          string `json:"guid" xml:"guid" bson:"_id"`
 	Title       string `json:"title" xml:"title"`
 	URL         string `json:"url" xml:"url"`
 	Description string `json:"description" xml:"description"`
