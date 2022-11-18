@@ -18,7 +18,7 @@ const (
 )
 
 // PostToApi sends the news to the API
-func PostToApi(newsList model.NewsClNewsList) error {
+func PostToApi(newsList model.NewsClNewsList, provider model.Provider) error {
 
 	var newsListToSend model.NewsClNewsList
 	newsListToSend.News = make([]model.NewsClNews, 0)
@@ -33,19 +33,20 @@ func PostToApi(newsList model.NewsClNewsList) error {
 	}
 
 	if len(newsListToSend.News) == 0 {
-		log.Println("No news to send to the API.")
+		log.Printf("No %v news to send to the API.\n", provider)
 	} else {
 		if len(newsListToSend.News) > limit {
-			log.Printf("Sending %d news to the API", limit)
 			newsLists := splitList(newsListToSend)
-			for _, newsList := range newsLists {
+			log.Printf("Sending %d %v news to the API in %d requests. Because the news list was too long and the list has been splitted.\n", len(newsListToSend.News), provider, len(newsLists))
+			for i, newsList := range newsLists {
+				log.Printf("Sending %d %v news to the API: %d/%d\n", len(newsList.News), provider, i+1, len(newsLists))
 				err := postToApi(newsList)
 				if err != nil {
 					return err
 				}
 			}
 		} else {
-			log.Printf("Sending %d news to the API", len(newsListToSend.News))
+			log.Printf("Sending %d %v news to the API", len(newsListToSend.News), provider)
 			err := postToApi(newsListToSend)
 			if err != nil {
 				return err
