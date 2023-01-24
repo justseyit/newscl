@@ -1,54 +1,60 @@
 package main
 
 import (
-	"log"
-	"newscl/api"
-	"newscl/model"
+	"net/http"
+	"newscl/api/handler"
+
 	"newscl/repository"
+	webhandler "newscl/web/handler"
+	"strings"
 )
 
-/*
-const (
-	port = 9999
-)*/
-
 func main() {
+	var fs http.Handler
+	repository.Init()
+	
+	mux := http.NewServeMux()
+	fs = http.FileServer(http.Dir("static"))
+	mux.Handle("/static/", http.StripPrefix("/static/", fs))
 
-	repository.InitMongoDB()
+	HandleAPI(mux)
+	HandleWeb(mux)
 
-	//mux := mux.NewRouter()
+	http.ListenAndServe(":9988", slashStripper(mux))
+}
 
-	//log.Println("Starting the scheduled task")
-	log.Println("Starting the task")
+func HandleAPI(mux *http.ServeMux) {
+	mux.HandleFunc("/api/sources/fetch", handler.GetSourceList)
+	mux.HandleFunc("/api/sources/delete", handler.DeleteSource)
+	mux.HandleFunc("/api/sources/add", handler.PostSource)
+	mux.HandleFunc("/api/service/start", handler.StartService)
+	mux.HandleFunc("/api/service/stop", handler.StopService)
+	mux.HandleFunc("/api/service/get", handler.GetServiceInfo)
+}
 
-	bbcNews, _ := repository.GetNewsByProvider(model.BBC)
-	errBBC := api.PostToApi(bbcNews, model.BBC)
-	if errBBC != nil {
-		log.Fatalf("Error posting BBC news to API: %v", errBBC)
-	}
+func HandleWeb(mux *http.ServeMux) {
+	mux.HandleFunc("/404", webhandler.NotFoundHandler)
+	mux.HandleFunc("/login", webhandler.LoginHandler)
+	mux.HandleFunc("/register", webhandler.RegisterHandler)
+	mux.HandleFunc("/logout", webhandler.LogoutHandler)
+	mux.HandleFunc("/account", webhandler.AccountHandler)
+	mux.HandleFunc("/", webhandler.IndexHandler)
+	mux.HandleFunc("/sources", webhandler.SourcesHandler)
+	mux.HandleFunc("/addSource", webhandler.AddSourceHandler)
+	mux.HandleFunc("/addLanguage", webhandler.AddLanguageHandler)
+	mux.HandleFunc("/addProvider", webhandler.AddProviderHandler)
+	mux.HandleFunc("/addCategory", webhandler.AddCategoryHandler)
+	mux.HandleFunc("/getCategories", webhandler.GetCategoriesHandler)
+	mux.HandleFunc("/getLanguages", webhandler.GetLanguagesHandler)
+	mux.HandleFunc("/getProviders", webhandler.GetProvidersHandler)
+	mux.HandleFunc("/getSources", webhandler.GetSourcesHandler)
+	mux.HandleFunc("/editSource", webhandler.EditSourceHandler)
+	mux.HandleFunc("/getNews", webhandler.GetNewsHandler)
+}
 
-	reutersNews, _ := repository.GetNewsByProvider(model.REUTERS)
-	errReuters := api.PostToApi(reutersNews, model.REUTERS)
-	if errReuters != nil {
-		log.Fatalf("Error posting Reuters news to API: %v", errReuters)
-	}
-
-	/*executor := sch.NewTimedExecutor(time.Second*3, time.Minute)
-
-	executor.Start(func() {
-		bbcNews, _ := repository.GetNewsByProvider(model.BBC)
-		errBBC := api.PostToApi(bbcNews)
-		if errBBC != nil {
-			log.Fatalf("Error posting BBC news to API: %v", errBBC)
-		}
-
-	}, true)
-
-	executor.Start(func() {
-		reutersNews, _ := repository.GetNewsByProvider(model.REUTERS)
-		errReuters := api.PostToApi(reutersNews)
-		if errReuters != nil {
-			log.Fatalf("Error posting Reuters news to API: %v", errReuters)
-		}
-	}, true)*/
+func slashStripper(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		r.URL.Path = strings.TrimSuffix(r.URL.Path, "/")
+		next.ServeHTTP(w, r)
+	})
 }

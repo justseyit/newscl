@@ -7,58 +7,30 @@ import (
 	"newscl/model"
 )
 
-
-func GetBBCNews() (model.NewsClNewsList, error) {
-	var newsList model.NewsClNewsList
-	bbcNews, err := GetBBCNewsRSS()
-	if err != nil {
-		return newsList, err
-	}
-	newsList = bbcNews.BBCRSSToNewsClNewsList()
-	return newsList, nil
-}
-
-func GetBBCNewsRSS() (model.BBCRSS, error) {
-	var bbcNews model.BBCRSS
-	err := GetRSS("https://feeds.bbci.co.uk/news/world/rss.xml", &bbcNews)
-	if err != nil {
-		return model.BBCRSS{}, err
-	}
-	return bbcNews, nil
-}
-
-func GetRSS(url string, v interface{}) error {
+func GetRSS(url string) (model.RSS, error) {
+	var rss model.RSS
 	resp, err := http.Get(url)
 	if err != nil {
-		return err
+		return rss, err
 	}
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		return err
+		return rss, err
 	}
-	err = xml.Unmarshal(body, v)
+	err = xml.Unmarshal(body, &rss)
 	if err != nil {
-		return err
+		return rss, err
 	}
-	return nil
+	return rss, nil
 }
 
-func GetReutersNews() (model.NewsClNewsList, error) {
+func GetNews(link string) (model.NewsClNewsList, error) {
 	var newsList model.NewsClNewsList
-	reutersNews, err := GetReutersNewsRSS()
+	rss, err := GetRSS(link)
 	if err != nil {
 		return newsList, err
 	}
-	newsList = reutersNews.ReutersRSSToNewsClNewsList()
+	newsList = rss.RSSToNewsClNewsList()
 	return newsList, nil
-}
-
-func GetReutersNewsRSS() (model.ReutersRSS, error) {
-	var reutersNews model.ReutersRSS
-	err := GetRSS("https://www.reutersagency.com/feed", &reutersNews)
-	if err != nil {
-		return model.ReutersRSS{}, err
-	}
-	return reutersNews, nil
 }

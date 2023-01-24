@@ -19,6 +19,7 @@ type NewsClNews struct {
 	Time        int    `json:"time" xml:"time"`
 	Tags        string `json:"tags" xml:"tags"`
 	Type        int    `json:"type" xml:"type"`
+	SourceID	string `json:"source_id" xml:"source_id"`
 }
 
 type NewsClResponse struct {

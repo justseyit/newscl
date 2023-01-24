@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html style="font-size: 16px;" lang="tr">
+
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="utf-8">
+  <meta name="keywords" content="Sources, 247, Categories, 34, Providers, 27, Languages, 5">
+  <meta name="description" content="">
+  <title>Dashboard</title>
+  <link rel="stylesheet" href="./static/site/nicepage.css" media="screen">
+  <link rel="stylesheet" href="./static/site/Dashboard.css" media="screen">
+  <link rel="stylesheet" href="./static/site/dropdown.css" media="screen">
+  <script class="u-script" type="text/javascript" src="./static/site/jquery.js" defer=""></script>
+  <script class="u-script" type="text/javascript" src="./static/site/nicepage.js" defer=""></script>
+  <meta name="generator" content="Nicepage 5.2.0, nicepage.com">
+  <link id="u-theme-google-font" rel="stylesheet"
+    href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i|Open+Sans:300,300i,400,400i,500,500i,600,600i,700,700i,800,800i">
+
+
+  <script type="application/ld+json">{
+		"@context": "http://schema.org",
+		"@type": "Organization",
+		"name": "Site1",
+		"logo": "images/default-logo.png"
+}</script>
+  <meta name="theme-color" content="#478ac9">
+  <meta property="og:title" content="Dashboard">
+  <meta property="og:description" content="">
+  <meta property="og:type" content="website">
+</head>
+
+<body class="u-body u-xl-mode" data-lang="tr">
+  <header class="u-clearfix u-header u-header" id="sec-2008">
+    <div style="display: flex;">
+      <div class="u-clearfix u-sheet u-sheet-1">
+        <a href="https://nicepage.com" class="u-image u-logo u-image-1">
+          <img src="images/default-logo.png" class="u-logo-image u-logo-image-1">
+        </a>
+        <nav class="u-menu u-menu-one-level u-offcanvas u-menu-1">
+          <div class="menu-collapse" style="font-size: 1rem; letter-spacing: 0px;">
+            <a class="u-button-style u-custom-left-right-menu-spacing u-custom-padding-bottom u-custom-top-bottom-menu-spacing u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base"
+              href="#">
+              <svg class="u-svg-link" viewBox="0 0 24 24">
+                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#menu-hamburger"></use>
+              </svg>
+              <svg class="u-svg-content" version="1.1" id="menu-hamburger" viewBox="0 0 16 16" x="0px" y="0px"
+                xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg">
+                <g>
+                  <rect y="1" width="16" height="2"></rect>
+                  <rect y="7" width="16" height="2"></rect>
+                  <rect y="13" width="16" height="2"></rect>
+                </g>
+              </svg>
+            </a>
+          </div>
+          <div class="u-custom-menu u-nav-container">
+            <ul class="u-nav u-unstyled u-nav-1">
+              <li class="u-nav-item"><a
+                  class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base"
+                  href="/index" style="padding: 10px 18px;">Dashboard</a>
+              </li>
+              <li class="u-nav-item"><a
+                  class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base"
+                  href="/getSources" style="padding: 10px 18px;">Sources</a>
+              </li>
+              <li class="u-nav-item"><a
+                  class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base"
+                  href="/getProviders" style="padding: 10px 18px;">Providers</a>
+              </li>
+              <li class="u-nav-item"><a
+                  class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base"
+                  href="/getCategories" style="padding: 10px 18px;">Categories</a>
+              </li>
+              <li class="u-nav-item"><a
+                  class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base"
+                  href="/getLanguages" style="padding: 10px 18px;">Languages</a>
+              </li>
+            </ul>
+          </div>
+          <div class="u-custom-menu u-nav-container-collapse">
+            <div class="u-black u-container-style u-inner-container-layout u-opacity u-opacity-95 u-sidenav">
+              <div class="u-inner-container-layout u-sidenav-overflow">
+                <div class="u-menu-close"></div>
+                <ul class="u-align-center u-nav u-popupmenu-items u-unstyled u-nav-2">
+                  <li class="u-nav-item"><a class="u-button-style u-nav-link" href="/index">Dashboard</a>
+                  </li>
+                  <li class="u-nav-item"><a class="u-button-style u-nav-link" href="/getSources">Sources</a>
+                  </li>
+                  <li class="u-nav-item"><a class="u-button-style u-nav-link" href="/getProviders">Providers</a>
+                  </li>
+                  <li class="u-nav-item"><a class="u-button-style u-nav-link" href="/getCategories">Categories</a>
+                  </li>
+                  <li class="u-nav-item"><a class="u-button-style u-nav-link" href="/getLanguages">Languages</a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="u-black u-menu-overlay u-opacity u-opacity-70"></div>
+          </div>
+        </nav>
+      </div>
+      <div class="dropdown">
+        <button class="dropbtn">Account</button>
+        <div class="dropdown-content">
+          <a href="./Account.html" style="color: green;">Settings</a>
+          <a href="#" style="color: red;">Logout</a>
+        </div>
+      </div>
+    </div>
+  </header>
+  <section class="u-clearfix u-section-1" id="sec-fbe9">
+    <div class="u-clearfix u-sheet u-sheet-1">
+      <div class="u-list u-list-1">
+        <div class="u-repeater u-repeater-1">
+          <div class="u-border-3 u-border-grey-40 u-container-style u-custom-item u-list-item u-repeater-item"
+            data-animation-name="" data-animation-duration="0" data-animation-delay="0" data-animation-direction=""
+            data-href="/getSources" title="Sources">
+            <div class="u-container-layout u-similar-container u-container-layout-1">
+              <h1 class="u-custom-item u-text u-text-default u-text-1">Sources</h1>
+              <h1 class="u-custom-item u-text u-text-default u-text-2">247</h1>
+            </div>
+          </div>
+          <div class="u-border-3 u-border-grey-40 u-container-style u-custom-item u-list-item u-repeater-item"
+            data-animation-name="" data-animation-duration="0" data-animation-delay="0" data-animation-direction=""
+            data-href="/getCategories" title="Categories">
+            <div class="u-container-layout u-similar-container u-container-layout-2">
+              <h1 class="u-custom-item u-text u-text-default u-text-3">Categories</h1>
+              <h1 class="u-custom-item u-text u-text-default u-text-4">34</h1>
+            </div>
+          </div>
+          <div class="u-border-3 u-border-grey-40 u-container-style u-custom-item u-list-item u-repeater-item"
+            data-animation-name="" data-animation-duration="0" data-animation-delay="0" data-animation-direction=""
+            data-href="/getProviders" title="Providers">
+            <div class="u-container-layout u-similar-container u-container-layout-3">
+              <h1 class="u-custom-item u-text u-text-default u-text-5">Providers</h1>
+              <h1 class="u-custom-item u-text u-text-default u-text-6">27</h1>
+            </div>
+          </div>
+          <div class="u-border-3 u-border-grey-40 u-container-style u-custom-item u-list-item u-repeater-item"
+            data-animation-name="" data-animation-duration="0" data-animation-delay="0" data-animation-direction=""
+            data-href="/getLanguages" title="Languages">
+            <div class="u-container-layout u-similar-container u-container-layout-4">
+              <h1 class="u-custom-item u-text u-text-default u-text-7">Languages</h1>
+              <h1 class="u-custom-item u-text u-text-default u-text-8">5</h1>
+            </div>
+          </div>
+        </div>
+      </div>
+      <h1 class="u-text u-text-default u-text-9">Service Status: Running<br>
+      </h1>
+      <a href="https://nicepage.cloud"
+        class="u-border-2 u-border-grey-75 u-btn u-button-style u-hover-palette-1-dark-1 u-palette-4-base u-btn-1">Start/stop
+        service</a>
+    </div>
+  </section>
+</body>
+
+</html>

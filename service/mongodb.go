@@ -62,20 +62,6 @@ func (m *MongoDB) GetAllNews() (model.NewsClNewsList, error) {
 	return newsList, nil
 }
 
-func (m *MongoDB) GetNewsByProvider(provider model.Provider) (model.NewsClNewsList, error) {
-	collection := m.Client.Database("newscl").Collection("news")
-	filter := bson.D{{Key: "source_name", Value: provider}}
-	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
-	defer cancel()
-	var newsList model.NewsClNewsList
-	cursor, err := collection.Find(ctx, filter)
-	cursor.All(ctx, &newsList.News)
-	if err != nil {
-		return newsList, err
-	}
-	return newsList, nil
-}
-
 func (m *MongoDB) GetNewsByLanguage(language string) (model.NewsClNewsList, error) {
 	collection := m.Client.Database("newscl").Collection("news")
 	filter := bson.D{{Key: "language", Value: language}}
@@ -89,6 +75,7 @@ func (m *MongoDB) GetNewsByLanguage(language string) (model.NewsClNewsList, erro
 	}
 	return newsList, nil
 }
+
 
 type newsJustID struct {
 	ID string `bson:"_id" json:"id"`
@@ -175,4 +162,95 @@ func (m *MongoDB) IsFailed(id string) (bool, error) {
 		}
 	}
 	return true, nil
+}
+
+func (m *MongoDB) GetProvidersFromDB() ([]model.Provider, error) {
+	collection := m.Client.Database("newscl").Collection("providers")
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
+	var providers []model.Provider
+	cursor, err := collection.Find(ctx, bson.D{})
+	if err != nil {
+		return providers, err
+	}
+	cursor.All(ctx, &providers)
+	return providers, nil
+}
+
+func (m *MongoDB) GetLanguagesFromDB() ([]model.Language, error) {
+	collection := m.Client.Database("newscl").Collection("languages")
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
+	var languages []model.Language
+	cursor, err := collection.Find(ctx, bson.D{})
+	if err != nil {
+		return languages, err
+	}
+	cursor.All(ctx, &languages)
+	return languages, nil
+}
+
+func (m *MongoDB) GetCategoriesFromDB() ([]model.Category, error) {
+	collection := m.Client.Database("newscl").Collection("categories")
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
+	var categories []model.Category
+	cursor, err := collection.Find(ctx, bson.D{})
+	if err != nil {
+		return categories, err
+	}
+	cursor.All(ctx, &categories)
+	return categories, nil
+}
+
+
+func (m *MongoDB) AggregateNews(){
+	//Update all of the news,
+	/*
+	* 1. Get all of the news
+	* 2. Add a new field called "sourceID"
+	* 3. If news's sourceName is BBC, then sourceID is 1
+	* 4. If news's sourceName is Reuters, then sourceID is 0
+	* 5. Update the news
+	*/
+
+	//1. Get all of the news
+	collection := m.Client.Database("newscl").Collection("news")
+	ctx, cancel := context.WithTimeout(context.Background(), 120*time.Second)
+	defer cancel()
+	var newsList model.NewsClNewsList
+	cursor, err := collection.Find(ctx, bson.D{})
+	if err != nil {
+		log.Fatal(err)
+	}
+	cursor.All(ctx, &newsList.News)
+
+	//2. Add a new field called "sourceID"
+	for i := 0; i < len(newsList.News); i++ {
+		newsList.News[i].SourceID = ""
+	}
+
+	//3. If news's sourceName is BBC, then sourceID is 1
+	for i := 0; i < len(newsList.News); i++ {
+		if newsList.News[i].SourceName == "BBC" {
+			newsList.News[i].SourceID = "1"
+		}
+	}
+
+	//4. If news's sourceName is Reuters, then sourceID is 0
+	for i := 0; i < len(newsList.News); i++ {
+		if newsList.News[i].SourceName == "Reuters" {
+			newsList.News[i].SourceID = "0"
+		}
+	}
+
+	//5. Update the news
+	for i := 0; i < len(newsList.News); i++ {
+		filter := bson.D{{Key: "_id", Value: newsList.News[i].ID}}
+		update := bson.D{{Key: "$set", Value: bson.D{{Key: "sourceID", Value: newsList.News[i].SourceID}}}}
+		_, err := collection.UpdateOne(ctx, filter, update)
+		if err != nil {
+			log.Fatal(err)
+		}
+	}
 }

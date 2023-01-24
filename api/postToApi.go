@@ -18,12 +18,12 @@ const (
 )
 
 // PostToApi sends the news to the API
-func PostToApi(newsList model.NewsClNewsList, provider model.Provider) error {
+func PostToApi() error {
 
 	var newsListToSend model.NewsClNewsList
 	newsListToSend.News = make([]model.NewsClNews, 0)
 
-	for _, news := range newsList.News {
+	for _, news := range repository.NewsClNewsList.News {
 		succeeded, _ := repository.Mongo.IsSucceeded(news.ID)
 		if !succeeded {
 			newsListToSend.News = append(newsListToSend.News, news)
@@ -33,26 +33,25 @@ func PostToApi(newsList model.NewsClNewsList, provider model.Provider) error {
 	}
 
 	if len(newsListToSend.News) == 0 {
-		log.Printf("No %v news to send to the API.\n", provider)
+		log.Println("No news to send to the API.")
 	} else {
 		if len(newsListToSend.News) > limit {
 			newsLists := splitList(newsListToSend)
-			log.Printf("Sending %d %v news to the API in %d requests. Because the news list was too long and the list has been splitted.\n", len(newsListToSend.News), provider, len(newsLists))
+			log.Printf("Sending %d news to the API in %d requests. Because the news list was too long and the list has been splitted.\n", len(newsListToSend.News), len(newsLists))
 			for i, newsList := range newsLists {
-				log.Printf("Sending %d %v news to the API: %d/%d\n", len(newsList.News), provider, i+1, len(newsLists))
+				log.Printf("Sending %d news to the API: %d/%d\n", len(newsList.News), i+1, len(newsLists))
 				err := postToApi(newsList)
 				if err != nil {
 					return err
 				}
 			}
 		} else {
-			log.Printf("Sending %d %v news to the API", len(newsListToSend.News), provider)
+			log.Printf("Sending %d news to the API.\n", len(newsListToSend.News))
 			err := postToApi(newsListToSend)
 			if err != nil {
 				return err
 			}
 		}
-
 	}
 	return nil
 }
@@ -84,8 +83,6 @@ func postToApi(newsList model.NewsClNewsList) error {
 
 	if err != nil {
 		return err
-		//fmt.Printf("client: could not create request: %s\n", err)
-		//os.Exit(1)
 	}
 	req.Header.Set("Content-Type", "application/json")
 
@@ -96,8 +93,6 @@ func postToApi(newsList model.NewsClNewsList) error {
 	res, err1 := client.Do(req)
 	if err1 != nil {
 		return err1
-		//fmt.Printf("client: error making http request: %s\n", err)
-		//os.Exit(1)
 	}
 
 	defer res.Body.Close()
@@ -114,6 +109,5 @@ func postToApi(newsList model.NewsClNewsList) error {
 			return err
 		}
 	}
-
 	return nil
 }
